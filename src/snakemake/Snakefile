@@ -1,0 +1,124 @@
+###########################################################################################################
+#                                            PARAMETERS
+###########################################################################################################
+
+# Directories
+BIN_DIR = '../../bin/'
+OUTPUT_DIR = '../../resources/sample_run/'
+
+# Inputs
+FASTQ = '../../resources/sample_data/sampleReads.fq'
+MIRNA_FASTA = '../../resources/sample_data/miRBase21_mature_mmu.fa'
+MIRNA_TO_GROUP = ???
+
+# Misc parameters
+KMER_SIZE = '20'
+COUNT_PLUS_STRAND_MAPPINGS_ONLY = True
+
+
+###########################################################################################################
+#                                             VARIABLES
+###########################################################################################################
+
+# Programs
+COLLAPSE_MIRNAS = BIN_DIR + '/shell/collapse_miRNAs'
+COUNT_ALIGNMENTS = BIN_DIR + '/java/AlignmentCountsByReference.jar'
+COMBINE_COUNTS = BIN_DIR + '/R/combine_counts_by_paralogs.R'
+KMER_SEARCH = BIN_DIR + '/java/PerfectKmerSearch.jar'
+
+# Files
+COLLAPSED_MIRNA_FASTA = OUTPUT_DIR + '/mirna_collapsed.fa'
+UNSORTED_BAM = OUTPUT_DIR + '/kmer.bam'
+COORD_SORTED_BAM = OUTPUT_DIR + '/kmer.sorted.bam'
+COORD_SORTED_BAI = OUTPUT_DIR + '/kmer.sorted.bai'
+INTERMEDIATE_COUNTS = OUTPUT_DIR + '/final_counts.txt'
+FINAL_COUNTS = OUTPUT_DIR + '/final_counts.txt'
+
+# Misc variables
+PLUS_STRAND_ONLY_JAVA = boolean_to_java_str(COUNT_PLUS_STRAND_MAPPINGS_ONLY)
+PLUS_STRAND_ONLY_R = boolean_to_R_str(COUNT_PLUS_STRAND_MAPPINGS_ONLY)
+
+###########################################################################################################
+#                                             FUNCTIONS
+###########################################################################################################
+
+def boolean_to_java_str(bool):
+	if bool:
+		return 'true'
+	else:
+		return 'false'
+
+def boolean_to_R_str(bool):
+	if bool:
+		return 'TRUE'
+	else:
+		return 'FALSE'
+		
+# Rules
+
+rule all:
+	input:
+		FINAL_COUNTS
+
+
+###########################################################################################################
+#                                              RULES
+###########################################################################################################
+
+rule collapse_mirna:
+	input:
+		MIRNA_FASTA
+	output:
+		COLLAPSED_MIRNA_FASTA
+	shell:
+		'{COLLAPSE_MIRNAS} {input} {output}'
+
+
+rule kmer_match_to_reference:
+    input:
+        	COLLAPSED_MIRNA_FASTA
+	output:
+        	UNSORTED_BAM
+	shell:
+		'java -jar {KMER_SEARCH} -b {output} -fa {input} -fq {FASTQ} -k {KMER_SIZE}'
+
+
+rule sort_sam_by_coordinate:
+	input:
+		UNSORTED_BAM
+	output:
+		COORD_SORTED_BAM
+	shell:
+		'samtools sort -o {output} -T {output}.tmp {input}'
+		
+
+rule index_coord_sorted_bam:
+	input:
+		COORD_SORTED_BAM
+	output:
+		COORD_SORTED_BAI
+	shell:
+		'samtools index {input} {output}'
+		
+
+rule make_intermediate_counts:
+	input:
+		COORD_SORTED_BAM
+	output:
+		INTERMEDIATE_COUNTS
+	shell:
+		'java -jar {COUNT_ALIGNMENTS} -b {input} -p false -ps {PLUS_STRAND_ONLY_JAVA} -o {output}'
+
+
+rule collapse_counts_by_families:
+	input:
+		COORD_SORTED_BAM,
+		INTERMEDIATE_COUNTS,
+		MIRNA_TO_GROUP
+	output:
+		FINAL_COUNTS
+	shell:
+		'Rscript {COMBINE_COUNTS} --sorted_bam {COORD_SORTED_BAM} --counts_file {INTERMEDIATE_COUNTS} --name_mapping_file {MIRNA_TO_GROUP} --plus_strand_mappings_only {PLUS_STRAND_ONLY_R} --output_collapsed_counts {output}'
+
+
+

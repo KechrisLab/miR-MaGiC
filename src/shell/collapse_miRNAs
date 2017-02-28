@@ -1,0 +1,21 @@
+cat $1 | \
+awk '
+	{
+		x=$0; 
+		gsub(">", "", x);
+		gsub(" ", "_", x); 
+		getline; 
+		gsub("U", "T", $0); 
+		gsub("u", "t", $0); 
+		print x "\t" toupper($0)}' | \
+sort -k 2 | \
+awk '
+	BEGIN {seq=""}
+	$2 == seq {name = $1 "_" name}
+	$2 != seq {
+		if(seq != "") {print ">" name "\n" seq}
+		name = $1;
+		seq = $2
+	}
+	END {print ">" name "\n" seq}' \
+> $2 
