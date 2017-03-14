@@ -47,7 +47,6 @@ if COUNT_PLUS_STRAND_MAPPINGS_ONLY == '???':
 
 # Programs
 KMER_SEARCH = JAR_DIR + '/PerfectKmerSearch.jar'
-COUNT_ALIGNMENTS = JAR_DIR + '/AlignmentCountsByReference.jar'
 COMBINE_COUNTS = JAR_DIR + '/CombineCountsByGroup.jar'
 
 # Output files
