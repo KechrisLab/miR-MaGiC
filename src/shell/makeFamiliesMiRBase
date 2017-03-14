@@ -1,3 +1,10 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: makeFamiliesMiRBase <fasta file of miRNAs>"
+    exit -1
+fi
+
 cat $1 | grep ">" | perl -pi -e 's/>//g' > tmp_nm
 
 cat tmp_nm | \

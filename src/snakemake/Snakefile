@@ -1,21 +1,3 @@
-###########################################################################################################
-#                                            PARAMETERS
-###########################################################################################################
-
-# Directories
-JAR_DIR = '../../resources/jar/'
-SRC_DIR = '../../src/'
-OUTPUT_DIR = '../../resources/sample_run/'
-
-# Inputs
-FASTQ = '../../resources/sample_data/sampleReads.fq'
-MIRNA_FASTA = '../../resources/sample_data/miRBase21_mature_mmu.fa'
-MIRNA_TO_GROUP = '../../resources/sample_data/families_miRBase21_mature_mmu.txt'
-
-# Misc parameters
-KMER_SIZE = '20'
-COUNT_PLUS_STRAND_MAPPINGS_ONLY = True
-
 
 ###########################################################################################################
 #                                             FUNCTIONS
@@ -31,6 +13,37 @@ def boolean_to_java_str(bool):
 ###########################################################################################################
 #                                             VARIABLES
 ###########################################################################################################
+
+# Config
+configfile: 'config.json'
+MIRNA_FASTA = config["mirna"]
+MIRNA_TO_GROUP = config["mirna_gp"]
+OUTPUT_DIR = config["outdir"]
+FASTQ = config["fastq"]
+JAR_DIR = config["jar"]
+KMER_SIZE = config["k"]
+COUNT_PLUS_STRAND_MAPPINGS_ONLY = config["plus_strand_only"]
+
+if OUTPUT_DIR == '???':
+	raise ValueError('Set output directory on command line with \"snakemake --config outdir=...\"')
+
+if FASTQ == '???':
+	raise ValueError('Set input fastq file on command line with \"snakemake --config fastq=...\"')
+
+if MIRNA_FASTA == '???':
+	raise ValueError('Set miRNA fasta file on command line with \"snakemake --config mirna=...\"')
+
+if MIRNA_TO_GROUP == '???':
+	raise ValueError('Set miRNA group table on command line with \"snakemake --config mirna_gp=...\"')
+
+if JAR_DIR == '???':
+	raise ValueError('Set jar directory on command line with \"snakemake --config jar=...\"')
+
+if KMER_SIZE == '???':
+	raise ValueError('Set kmer size on command line with \"snakemake --config k=...\"')
+
+if COUNT_PLUS_STRAND_MAPPINGS_ONLY == '???':
+	raise ValueError('Set count plus strand mappings only (True or False) on command line with \"snakemake --config plus_strand_only=...\"')
 
 # Programs
 KMER_SEARCH = JAR_DIR + '/PerfectKmerSearch.jar'
