@@ -4,7 +4,7 @@ miR-MaGiC is a pipeline for miRNA expression quantification from small RNA-seq. 
 
 # What isn't miR-MaGiC?
 
-miR-MaGiC reports estimated counts for functional equivalence classes of miRNAs. It does not perform normalization or differential expression analyses.
+miR-MaGiC reports estimated counts for functional equivalence classes of miRNAs. It does not perform normalization or differential expression analysis.
 
 # Citation
 
@@ -23,7 +23,7 @@ There is nothing to install. Just clone or download this repository.
 
 ### Snakemake workflow
 
-The workflow is defined in `pipeline/Snakefile` and `pipeline/config.json`.
+The workflow is defined in `pipeline/Snakefile`.
 
 ### Workflow components
 
@@ -41,7 +41,7 @@ The Java source code for pipeline steps is in `src/mirmagic/`.
 
 ## Inputs
 
-*See explanation of parameters below.*
+*(See explanation of parameters below.)*
 
 - Pipeline components (this repository)
 - Fastq file of small RNA-seq reads
@@ -50,7 +50,7 @@ The Java source code for pipeline steps is in `src/mirmagic/`.
 
 ## Running miR-MaGiC
 
-The pipeline is executed by invoking the `snakemake` executable with command line arguments specifying the parameters.
+The pipeline is executed by invoking the `snakemake` command with arguments specifying the parameters.
 
 ### Sample command line
 
