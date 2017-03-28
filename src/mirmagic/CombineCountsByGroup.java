@@ -37,6 +37,13 @@ public class CombineCountsByGroup {
 	 * @param plusStrandMappingsOnly Only count mappings to plus strand
 	 */
 	private CombineCountsByGroup(String bam, String refFasta, String groupTable, boolean plusStrandMappingsOnly) {
+		
+		System.out.println("\nCombining counts by group...");
+		System.out.println("Bam file:\t" + bam);
+		System.out.println("Reference fasta file\t" + refFasta);
+		System.out.println("Group table:\t" + groupTable);
+		System.out.println("Plus strand mappings only:\t" + plusStrandMappingsOnly);
+		
 		// Initialize the SAM reader
 		reader = new SAMFileReader(new File(bam));
 		// Get reference sequence lengths
@@ -121,6 +128,9 @@ public class CombineCountsByGroup {
 		CombineCountsByGroup c = new CombineCountsByGroup(p.getStringArg("-b"), p.getStringArg("-f"), p.getStringArg("-g"), p.getBooleanArg("-p"));
 		c.writeCombinedCounts(p.getStringArg("-o"));
 		
+		System.out.println("");
+		System.out.println("Done combining counts by group.");
+
 	}
 
 }

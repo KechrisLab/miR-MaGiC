@@ -3,7 +3,6 @@ package mirmagic;
 import java.io.*;
 import java.util.*;
 
-import org.apache.log4j.Logger;
 
 /**
  * Fastq file reader
@@ -11,7 +10,6 @@ import org.apache.log4j.Logger;
  *
  */
 public class FastqParser implements Iterator<FastqSequence>{
-	static Logger logger = Logger.getLogger(FastqParser.class.getName());
 	Collection<FastqSequence> sequences;
 	File fastqFile;
 	BufferedReader reader;
@@ -64,7 +62,7 @@ public class FastqParser implements Iterator<FastqSequence>{
 	        nextLine = reader.readLine() ;
 
 		}catch(Exception ex){ 
-			logger.error("Exception thrown while reading fastq file",ex);
+			System.err.println("Exception thrown while reading fastq file");
 		}
 
 		return seq;

@@ -18,8 +18,6 @@ import net.sf.samtools.CigarOperator;
 import net.sf.samtools.SAMFileHeader;
 import net.sf.samtools.SAMRecord;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 /**
  * A query is considered to match a target if they share a perfect kmer match of the specified length
@@ -297,8 +295,8 @@ public class PerfectKmerSearch {
 	 */
 	private void writeFirstKmerMatchEachTarget(String queryFastq, String outputBam) throws IOException {
 		
-		logger.info("");
-		logger.info("Writing matches for reads in " + queryFastq + " to " + outputBam + "...");
+		System.out.println("");
+		System.out.println("Writing matches for reads in " + queryFastq + " to " + outputBam + "...");
 		
 		BAMFileWriter writer = new BAMFileWriter(new File(outputBam));
 		writer.setSortOrder(SAMFileHeader.SortOrder.unsorted, false);
@@ -316,7 +314,7 @@ public class PerfectKmerSearch {
 			FastqSequence query = reader.next();
 			numDone++;
 			if(numDone % 1000000 == 0) {
-				logger.info("Finished " + numDone + " reads");
+				System.out.println("Finished " + numDone + " reads");
 			}
 			try {
 				Collection<SAMRecord> alignments = samRecordFirstKmerMatchEachTarget(query);
@@ -334,21 +332,21 @@ public class PerfectKmerSearch {
 				numTooManyNs++;
 			}
 		}
-		logger.info("");
-		logger.info("RESULTS");
-		logger.info("Reads mapped uniquely:\t" + numUniquelyMapped);
-		logger.info("Reads mapped to multiple targets:\t" + numMultiMapped);
-		logger.info("Reads unmapped:\t" + numUnmapped);
+		System.out.println("");
+		System.out.println("RESULTS");
+		System.out.println("Reads mapped uniquely:\t" + numUniquelyMapped);
+		System.out.println("Reads mapped to multiple targets:\t" + numMultiMapped);
+		System.out.println("Reads unmapped:\t" + numUnmapped);
 		if(numTooShort > 0) {
-			logger.warn("Reads skipped because they were too short:\t" + numTooShort);
+			System.out.println("Reads skipped because they were too short:\t" + numTooShort);
 		}
 		if(numIllegalChar > 0) {
-			logger.warn("Reads skipped because they contain an illegal character:\t" + numIllegalChar);
+			System.out.println("Reads skipped because they contain an illegal character:\t" + numIllegalChar);
 		}
 		if(numTooManyNs > 0) {
-			logger.warn("Reads skipped because they contain > " + MAX_PCT_N + " N's:\t" + numTooManyNs);
+			System.out.println("Reads skipped because they contain > " + MAX_PCT_N + " N's:\t" + numTooManyNs);
 		}
-		logger.info("");
+		System.out.println("");
 		reader.close();
 		writer.close();
 		
@@ -440,7 +438,7 @@ public class PerfectKmerSearch {
 	private int mink; // Minimum kmer length (set to shortest target length when making kmer index for targets, or to maxk, whichever is smaller)
 	private int maxk; // Maximum kmer length to search for
 	private Map<String, Collection<SequencePos>> targetKmers; // Key is kmer; value is collection of sequences with kmer and the match position
-	private static Logger logger = Logger.getLogger(PerfectKmerSearch.class.getName());
+	//private static Logger logger = Logger.getLogger(PerfectKmerSearch.class.getName());
 	private SAMFileHeader samHeader; // SAM header for target sequences
 	private static double MAX_PCT_N = 0.05; // Max percentage of N's in reads
 	
@@ -512,9 +510,6 @@ public class PerfectKmerSearch {
 		}
 		
 		boolean checkN = len <= MAX_LEN_TO_CHECK_N_CONTENT;
-		if(!checkN) {
-			logger.warn("Not checking for N content because sequence is too long: " + seq.getName());
-		}
 		
 		int numNs = 0;
 		for(int i = 0; i < len; i++) {
@@ -553,8 +548,8 @@ public class PerfectKmerSearch {
 	 * @param fasta Fasta file of target sequences
 	 */
 	private void createIndex(String fasta) {
-		logger.info("");
-		logger.info("Creating index for target fasta " + fasta + "...");
+		System.out.println("");
+		System.out.println("Creating index for target fasta " + fasta + "...");
 		targetKmers = new HashMap<String, Collection<SequencePos>>();
 		Collection<Sequence> targets = FastaReader.readFromFile(fasta);
 		int numSkipped = 0;
@@ -562,7 +557,6 @@ public class PerfectKmerSearch {
 			try {
 				validateSequence(target);
 			} catch(SequenceTooShortException e) {
-				logger.warn("Caught exception, skipping target sequence:\t" + e.getMessage());
 				numSkipped++;
 				continue;
 			}
@@ -584,11 +578,11 @@ public class PerfectKmerSearch {
 			}
 		}
 		if(numSkipped > 0) {
-			logger.warn("");
-			logger.warn("Skipped " + numSkipped + " target sequences that did not validate");
-			logger.warn("");
+			System.out.println("");
+			System.out.println("Skipped " + numSkipped + " target sequences that did not validate");
+			System.out.println("");
 		}
-		logger.info("Done creating index. Minimum k is " + mink + ". Maximum k is " + maxk + ".");
+		System.out.println("Done creating index. Minimum k is " + mink + ". Maximum k is " + maxk + ".");
 	}
 	
 	/**
@@ -610,7 +604,6 @@ public class PerfectKmerSearch {
 		}
 		Collection<String> rtrn = new HashSet<String>();
 		rtrn.add(sequence);
-		logger.debug("EXPANDED_Ns\t" + sequence);
 		return rtrn;
 	}
 		
@@ -716,12 +709,11 @@ public class PerfectKmerSearch {
 			throw new IllegalArgumentException("Invalid value for max proportion of N's: " + MAX_PCT_N);
 		}
 		
-		logger.setLevel(Level.INFO);
 		PerfectKmerSearch pks = new PerfectKmerSearch(k, fasta);
 		pks.writeFirstKmerMatchEachTarget(fastq, bam);
 		
-		logger.info("");
-		logger.info("All done.");
+		System.out.println("");
+		System.out.println("Done with kmer search.");
 		
 	}
 	
