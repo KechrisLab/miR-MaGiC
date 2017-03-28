@@ -41,7 +41,12 @@ The Java source code for pipeline steps is in `src/mirmagic/`.
 
 ## Inputs
 
-[???]
+*See explanation of parameters below.*
+
+- Pipeline components (this repository)
+- Fastq file of small RNA-seq reads
+- Fasta file of mature miRNA sequences
+- Table of functional groups of miRNAs
 
 ## Running miR-MaGiC
 
@@ -67,11 +72,11 @@ plus_strand_only=True
 
 *All parameters are required.*
 
-*In the descriptions below, `$MIRMAGIC_DIR` refers to the root directory of the miR-MaGiC repository on your machine.*
+In the descriptions below, `$MIRMAGIC_DIR` refers to the root directory of the miR-MaGiC repository on your machine.
 
 - `--directory` The directory containing the `Snakefile` and `config.json`. If you leave the repository contents as downloaded, this will be `$MIRMAGIC_DIR/pipeline/`.
 - `--snakefile` The full path to the `Snakefile`. If you leave the repository contents as downloaded, this will be `$MIRMAGIC_DIR/pipeline/Snakefile`.
-- `--config` The job configuration to pass to Snakemake. This is where you specify run-specific parameters. The value is of the form `[KEY=VALUE [KEY=VALUE ...]]`. All run-specific parameters are required. If one is missing, the workflow will die with an error message specifying the missing parameter. 
+- `--config` The job configuration to pass to Snakemake. This is where you specify run-specific parameters. The value is of the form `[KEY=VALUE [KEY=VALUE ...]]`. All run-specific parameters are required. If a parameter is missing, the workflow will die with an error message specifying the missing parameter. 
   - `outdir` Directory to write output to
   - `fastq` Input fastq file
   - `mirna` Fasta file of mature miRNA sequences with the same nucleotide bases as the fastq file (be careful with T vs. U). Fasta sequence names must contain no whitespace.
@@ -80,7 +85,9 @@ plus_strand_only=True
   - `k` The length of perfect matches to require between reads and miRNA sequences. A read is matched to a miRNA if they contain identical subsequences of length *k*; the rest of the read and miRNA are ignored in that case. miRNAs shorter than *k* bases are allowed to have a perfect match of their full length instead of requiring a match of length *k*. Recommended: `k=20`.
   - `plus_strand_only` Do not count reverse complement matches. Possible values: `True`, `False`.
 
+### Output
 
+In the provided output directory, miR-MaGiC writes a file whose name begins with `final_counts` and includes the fastq file name. Each line of the file has two fields: the name of a functional group of miRNAs, and the total number of reads matched to that group. If a read matches more than one miRNA in a group, it is only counted once for the group. Groups with zero count are not included in the output.
 
 
 
