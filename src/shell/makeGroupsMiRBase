@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# This script takes a fasta file of miRBase mature miRNAs
+# with IDs such as "hsa-let-7f-2-3p" and maps them to the core
+# part of their ID (in the previous example, removing the -2-).
+# It then writes a table where each line is <original_ID   simplified_ID>.
+# The script assumes that ID format as seen in the human and mouse
+# miRBase databases.
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: makeFamiliesMiRBase <fasta file of miRNAs>"
+    exit -1
+fi
+
+cat $1 | grep ">" | perl -pi -e 's/>//g' > tmp_nm
+
+cat tmp_nm | \
+perl -pi -e 's/(\-\d+[a-z]?\-)\d+\-/\1/g' | \
+perl -pi -e 's/\.2-3p//g' | \
+perl -pi -e 's/\.2-5p//g' | \
+paste tmp_nm -
+
+rm tmp_nm
+
