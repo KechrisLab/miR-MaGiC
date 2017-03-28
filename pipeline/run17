@@ -1,0 +1,10 @@
+snakemake \
+--config \
+outdir=/Users/prussell/Documents/smRNA_LXS/output/paper_pipeline_test/ \
+fastq=/Users/prussell/Documents/smRNA_LXS/output/paper_pipeline_test/17_ATCACG.clipped.qualFiltered.fq \
+mirna=/Users/prussell/Documents/smRNA_LXS/output/paper_pipeline_test/collapsed_mm10_miRBase_mature_10_27_15.LXS107.fa \
+mirna_gp=/Users/prussell/Documents/smRNA_LXS/output/paper_pipeline_test/transcript_ids_17_ATCACG_5_LXS107_collapsed_families.out \
+jar=/Users/prussell/Documents/smRNA_LXS/src/miR-MaGiC/resources/jar/ \
+k=20 \
+plus_strand_only=True
+
