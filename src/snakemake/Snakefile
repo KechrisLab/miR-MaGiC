@@ -1,3 +1,4 @@
+import os.path
 
 ###########################################################################################################
 #                                             FUNCTIONS
@@ -45,18 +46,21 @@ if KMER_SIZE == '???':
 if COUNT_PLUS_STRAND_MAPPINGS_ONLY == '???':
 	raise ValueError('Set count plus strand mappings only (True or False) on command line with \"snakemake --config plus_strand_only=...\"')
 
+# Misc variables
+SAMPLE = os.path.basename(FASTQ).replace('.fq', '').replace('.fastq', '')
+PLUS_STRAND_ONLY_JAVA = boolean_to_java_str(COUNT_PLUS_STRAND_MAPPINGS_ONLY)
+
 # Programs
 KMER_SEARCH = JAR_DIR + '/PerfectKmerSearch.jar'
 COMBINE_COUNTS = JAR_DIR + '/CombineCountsByGroup.jar'
+PICARD = JAR_DIR + '/picard.jar'
 
 # Output files
-UNSORTED_BAM = OUTPUT_DIR + '/kmer.bam'
-COORD_SORTED_BAM = OUTPUT_DIR + '/kmer.sorted.bam'
-COORD_SORTED_BAI = OUTPUT_DIR + '/kmer.sorted.bai'
-FINAL_COUNTS = OUTPUT_DIR + '/final_counts.txt'
+UNSORTED_BAM = OUTPUT_DIR + '/kmer.' + SAMPLE + '.bam'
+COORD_SORTED_BAM = OUTPUT_DIR + '/kmer.' + SAMPLE + '.sorted.bam'
+COORD_SORTED_BAI = OUTPUT_DIR + '/kmer.' + SAMPLE + '.sorted.bai'
+FINAL_COUNTS = OUTPUT_DIR + '/final_counts.' + SAMPLE + '.txt'
 
-# Misc variables
-PLUS_STRAND_ONLY_JAVA = boolean_to_java_str(COUNT_PLUS_STRAND_MAPPINGS_ONLY)
 
 
 ###########################################################################################################
@@ -83,7 +87,7 @@ rule sort_bam:
 	output:
 		COORD_SORTED_BAM
 	shell:
-		'samtools sort -o {output} -T {output}.tmp {input}'
+		'java -jar {PICARD} SortSam INPUT={input} OUTPUT={output} SORT_ORDER=coordinate'
 		
 
 rule index_bam:
@@ -92,7 +96,7 @@ rule index_bam:
 	output:
 		COORD_SORTED_BAI
 	shell:
-		'samtools index {input} {output}'
+		'java -jar {PICARD} BuildBamIndex INPUT={input} OUTPUT={output}'
 		
 
 rule collapse_counts_by_families:
@@ -102,8 +106,11 @@ rule collapse_counts_by_families:
 		MIRNA_TO_GROUP
 	output:
 		FINAL_COUNTS
-	shell:
-		'java -jar {COMBINE_COUNTS} -b {COORD_SORTED_BAM} -f {MIRNA_FASTA} -g {MIRNA_TO_GROUP} -p {PLUS_STRAND_ONLY_JAVA} -o {output}'
+	run:
+		shell('java -jar {COMBINE_COUNTS} -b {COORD_SORTED_BAM} -f {MIRNA_FASTA} -g {MIRNA_TO_GROUP} -p {PLUS_STRAND_ONLY_JAVA} -o {output}')
+		shell('rm -f {UNSORTED_BAM}')
+		shell('rm -f {COORD_SORTED_BAM}')
+		shell('rm -f {COORD_SORTED_BAI}')
 
 
 
