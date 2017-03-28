@@ -40,9 +40,35 @@ The Java source code for pipeline steps is in `src/mirmagic/`.
 
 # Usage
 
-[Inputs]
+## Inputs
 
-[Running]
+
+
+## Running miR-MaGiC
+
+The pipeline is executed by invoking the `snakemake` executable with command line arguments specifying the parameters.
+
+### Sample command line
+
+```bash
+snakemake \ 
+--directory /path/to/directory/containing/Snakefile/and/configjson/ \ 
+--snakefile /full/path/to/Snakefile \
+--config \
+outdir=/path/to/output/directory/ \
+fastq=/path/to/fastq.fastq \
+mirna=/path/to/mirnas.fasta \
+mirna_gp=/path/to/functional/groups/table.txt \
+jar=/path/to/miR-MaGiC/pipeline/ \
+k=20 \
+plus_strand_only=True
+```
+
+### Explanation of command line parameters
+
+
+
+
 
 
 
