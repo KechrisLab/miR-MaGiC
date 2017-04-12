@@ -37,6 +37,10 @@ miR-MaGiC combines counts at the level of functional groups of miRNAs. The group
 
 The Java source code for pipeline steps is in `src/mirmagic/`.
 
+### Scripts and resources to reproduce the results in the miR-MaGiC paper
+
+These are in `paper` with a separate README.
+
 # Usage
 
 ## Inputs
