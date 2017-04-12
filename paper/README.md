@@ -4,3 +4,7 @@
 
 R scripts to produce the figures in the paper from the output of each quantification method
 
+## resources/
+
+Sample and sequencing metadata table
+
