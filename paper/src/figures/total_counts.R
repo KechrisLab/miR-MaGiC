@@ -31,8 +31,7 @@ transparentColor <- function(color, opacity) {
 }
 
 # Scatter plot of total count vs input number of filtered reads
-scatterCountVsReads <- function(xymax, outPdf) {
-  pdf(file=paste(out.plots.dir, outPdf, sep="/"), width=11, height=8.5)
+scatterCountVsReads <- function(xymax) {
   mar.default <- c(5,4,4,2) + 0.1
   par(mar = mar.default + c(0, 2, 0, 0))
   colors = c("purple3", "forestgreen", "deepskyblue", "blue", "lightsalmon1", "red")
@@ -40,14 +39,14 @@ scatterCountVsReads <- function(xymax, outPdf) {
        c(total.count.israp, total.count.mirdeep, total.count.mirge, total.count.mirge.noPermissive, total.count.magic.no.collapse, 
          total.count.magic.collapse.mirbase),
        xlab="Number of clipped, filtered reads",
-       ylab="Estimated total read count from quantification method", 
+       ylab="Estimated total read count from method", 
        col=unlist(lapply(c(rep(colors[1], length(samples)), rep(colors[2], length(samples)), 
                            rep(colors[3], length(samples)), rep(colors[4], length(samples)),
                            rep(colors[5], length(samples)), rep(colors[6], length(samples))), 
                          function(x) transparentColor(x, 80))),
        pch=16, 
        #cex=0.75,
-       cex.lab=2,
+       cex.lab=1.5,
        xlim = c(0, xymax),
        ylim = c(0, xymax)
   )
@@ -61,12 +60,14 @@ scatterCountVsReads <- function(xymax, outPdf) {
   legend('topleft', 
          c("iSRAP", "miRDeep2", "miRge", "miRgeModified", "MaGiC_noCollapse", "MaGiC_miRBase"), 
          col=colors,
-         cex=1.5, pch=16)
-  dev.off()
+         cex=1.3, pch=16)
 }
 
-scatterCountVsReads(85000000, "total_count_vs_filtered_reads.pdf")
-scatterCountVsReads(40000000, "total_count_vs_filtered_reads_zoom.pdf")
+pdf(file=paste(out.plots.dir, "scatter_counts_vs_total_reads.pdf", sep="/"), width=7, height=11)
+par(mfcol=c(2,1))
+scatterCountVsReads(85000000)
+scatterCountVsReads(40000000)
+dev.off()
 
 
 # Sample rank for number of input reads and total estimated count
