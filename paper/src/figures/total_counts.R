@@ -199,6 +199,6 @@ bar_plot_mse <- function(counts, file, title, ymax) {
   par(op)
 }
 
-bar_plot_mse(total.count.all, "mse_all_total_count.pdf", "Mean square error of total estimated count vs. input filtered reads", ymax = 350)
+bar_plot_mse(total.count.all, "mse_all_total_count.pdf", "MSE of total estimated counts vs. total number of input filtered reads", ymax = 350)
 
 
