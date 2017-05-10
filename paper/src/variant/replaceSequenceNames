@@ -1,0 +1,33 @@
+echo "Replacing sequence names"
+
+echo "Writing names to tmp file"
+
+grep ">" sequences/$1.fa | perl -pi -e 's/>//g' | awk '{print $1}' > strain_specific_sequences/tmp_names_$2
+
+echo "Running FastaReplaceNames"
+
+java -jar -Xmx5g -Xms3g -Xmn2g /vol4/home/prussell/Software/Jar/FastaReplaceNames.jar \
+-i strain_specific_sequences/$1.$2.fa \
+-n strain_specific_sequences/tmp_names_$2 \
+-o strain_specific_sequences/withNames_$1.$2.fa
+
+rm -f strain_specific_sequences/tmp_names_$2
+
+echo "Creating script"
+
+awk '$1 !~ /#/ {print $1}' strain_specific_vcfs/$3.$2.vcf \
+| sort -u \
+| awk '{print "perl -pi -e '\''s/" $1 "/" $1 "_modified_strain_specific_variants/g'\'' $1"}' \
+> scripts/replace_names_miRNAs_with_variants_$2
+
+echo "Making executable"
+
+chmod +x scripts/replace_names_miRNAs_with_variants_$2
+
+echo "Running script"
+
+scripts/replace_names_miRNAs_with_variants_$2 strain_specific_sequences/withNames_$1.$2.fa
+
+rm -f scripts/replace_names_miRNAs_with_variants_$2
+
+

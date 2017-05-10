@@ -1,0 +1,15 @@
+cat $2 | \
+awk -v strain=$1 '
+	BEGIN {
+		col=0;
+		getline; print; 
+		getline; print; 
+		getline; print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $5 "\t" $6 "\t" $7 "\t" $8;
+		for(i=1; i<=NF; i++) {
+			if($i == strain) {
+				col = i;
+			}
+		}
+	}
+	$col == "1/1" {print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $5 "\t" $6 "\t" $7 "\t" $8}	
+' > $3 
