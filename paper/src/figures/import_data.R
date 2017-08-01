@@ -68,7 +68,10 @@ metadata <- read.table(metadata.file, header=T)
 rownames(metadata) <- paste(metadata$Core_ID, "_", metadata$Batch, "_", metadata$Strain, sep="")
 counts.clipped.filtered <- read.table(filtered.read.counts.file, header=T)
 rownames(counts.clipped.filtered) <- counts.clipped.filtered$ID
+counts.raw <- read.table(raw.read.counts.file, header=T)
+rownames(counts.raw) <- counts.raw$ID
 metadata$Filtered_read_count <- counts.clipped.filtered[rownames(metadata),]$Count
+metadata$Raw_read_count <- counts.raw[rownames(metadata),]$Raw_read_count
 
 # Import the counts
 counts.israp <- import.counts.iSRAP()
@@ -80,8 +83,8 @@ counts.mirge <- import.counts.mirge(mirge.counts.dir)
 counts.mirge.noPermissive <- import.counts.mirge(mirge.counts.noPermissive.dir)
 
 # Get the sample names
-samples <- intersect(intersect(intersect(intersect(intersect(intersect(colnames(counts.magic.no.collapse), colnames(counts.israp)), 
-                               colnames(counts.mirdeep)), colnames(counts.mirge)), colnames(counts.mirge.noPermissive)), 
+samples <- intersect(intersect(intersect(intersect(intersect(intersect(colnames(counts.magic.no.collapse), colnames(counts.israp)),
+                               colnames(counts.mirdeep)), colnames(counts.mirge)), colnames(counts.mirge.noPermissive)),
                                colnames(counts.magic.collapse.mimat)), colnames(counts.magic.collapse.mirbase))
 samples.without.X <- unlist(lapply(samples, function(x) if(substr(x, 1, 1) == "X") substr(x, 2, nchar(x)) else x))
 get.strain <- function(sample) {y <- unlist(strsplit(sample, "_")); y[length(y)]}
