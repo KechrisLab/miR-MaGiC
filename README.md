@@ -1,6 +1,6 @@
 # What is miR-MaGiC?
 
-miR-MaGiC is a pipeline for miRNA expression quantification from small RNA-seq. miR-MaGiC is distinct from common tools in that it (1)  performs highly stringent mapping to mature miRNA sequences, minimizing the number of ambiguous mappings, and (2) performs collapsing of counts over functional equivalence classes of miRNAs, instead of reporting counts for individual miRNAs. The pipeline is defined in a [Snakemake](https://snakemake.readthedocs.io/en/stable/) workflow and consists of standalone Java programs.
+miR-MaGiC (**miR**NA quantification by **g**roup **c**ollapsing) is a pipeline for miRNA expression quantification from small RNA-seq. miR-MaGiC is distinct from common tools in that it (1)  performs highly stringent mapping to mature miRNA sequences, minimizing the number of ambiguous mappings, and (2) performs collapsing of counts over functional equivalence classes of miRNAs, instead of reporting counts for individual miRNAs. The pipeline is defined in a [Snakemake](https://snakemake.readthedocs.io/en/stable/) workflow and consists of standalone Java programs.
 
 # What isn't miR-MaGiC?
 
