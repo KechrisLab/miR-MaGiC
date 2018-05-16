@@ -6,9 +6,9 @@ miR-MaGiC (**miR**NA quantification by **g**roup **c**ollapsing) is a pipeline f
 
 miR-MaGiC reports estimated counts for functional equivalence classes of miRNAs. It does not perform normalization or differential expression analysis.
 
-# Citation
+# Publication
 
-TBA
+Russell et al. "miR-MaGiC improves quantification accuracy for small RNA-seq". BMC Research Notes 201811:296 [https://doi.org/10.1186/s13104-018-3418-2](https://doi.org/10.1186/s13104-018-3418-2)
 
 # Requirements
 
