@@ -8,7 +8,7 @@ miR-MaGiC reports estimated counts for functional equivalence classes of miRNAs.
 
 # Publication
 
-Russell et al. "miR-MaGiC improves quantification accuracy for small RNA-seq". BMC Research Notes 201811:296 [https://doi.org/10.1186/s13104-018-3418-2](https://doi.org/10.1186/s13104-018-3418-2)
+Russell et al. "miR-MaGiC improves quantification accuracy for small RNA-seq". BMC Research Notes 2018 11:296 [https://doi.org/10.1186/s13104-018-3418-2](https://doi.org/10.1186/s13104-018-3418-2)
 
 # Requirements
 
