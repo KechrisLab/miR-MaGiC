@@ -47,16 +47,26 @@ public class FastqParser implements Iterator<FastqSequence>{
 		return nextLine != null;
 	}
 
+	private void exitIfBlank(String line) {
+		if(line.isEmpty()) {
+			System.err.println("Error: no blank lines allowed in fastq file. Exiting.");
+			System.exit(-1);
+		}
+	}
+	
 	public FastqSequence next() {
 		FastqSequence seq = null;
 		try{
-
 			
 	        if (nextLine  != null) {
         		String firstLine=nextLine;
+        		exitIfBlank(firstLine);
         		String secondLine=reader.readLine();
+        		exitIfBlank(secondLine);
 				String thirdLine=reader.readLine();
+        		exitIfBlank(thirdLine);
         		String fourthLine=reader.readLine();
+        		exitIfBlank(fourthLine);
         		seq=new FastqSequence(firstLine, secondLine, thirdLine, fourthLine);
 	        }
 	        nextLine = reader.readLine() ;
