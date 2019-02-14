@@ -80,6 +80,9 @@ public class CombineCountsByGroup {
 	}
 	
 	private Set<String> getMappedRecordNames(String refName) {
+		if(!refLen.containsKey(refName)) {
+			throw new IllegalArgumentException("Sequence " + refName + " is not in sequence fasta file. Sets of sequences must match.");
+		}
 		SAMRecordIterator iter = reader.query(refName, 0, refLen.get(refName).intValue(), false);
 		Set<String> rtrn = new HashSet<String>();
 		while(iter.hasNext()) {
