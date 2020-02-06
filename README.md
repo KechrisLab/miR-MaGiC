@@ -93,5 +93,3 @@ In the descriptions below, `$MIRMAGIC_DIR` refers to the root directory of the m
 
 In the provided output directory, miR-MaGiC writes a file whose name begins with `final_counts` and includes the fastq file name. Each line of the file has two fields: the name of a functional group of miRNAs, and the total number of reads matched to that group. If a read matches more than one miRNA in a group, it is only counted once for the group. Groups with zero count are not included in the output.
 
-
-
